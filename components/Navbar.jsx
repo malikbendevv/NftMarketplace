@@ -6,7 +6,6 @@ import Link from "next/link";
 
 import images from "../assets";
 import { Button } from "./";
-import { isMobile } from "web3modal";
 
 const MenuItems = ({ isMobile, active, setActive }) => {
   const generateLink = (index) => {
@@ -24,7 +23,7 @@ const MenuItems = ({ isMobile, active, setActive }) => {
   return (
     <ul
       className={`list-none flexCenter flex-row ${
-        isMobile && "flex-col h-full"
+        isMobile ? "flex-col h-full" : ""
       }`}
     >
       {["Explore NFTS", "Listed NFTS", "My NFTS"].map((item, index) => (
@@ -106,7 +105,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="flex flex-initial flex-row justify-end">
-        <div className="flex item-center mr-2">
+        <div className="flex items-center mr-2">
           <input
             type="checkbox"
             className="checkbox"
@@ -142,7 +141,7 @@ const Navbar = () => {
             height={20}
             alt="Close"
             onClick={() => setisOpen(false)}
-            className={theme === "light" && "filter invert"}
+            className={theme === "light" ? "filter invert" : ""}
           />
         ) : (
           <Image
@@ -152,7 +151,7 @@ const Navbar = () => {
             height={25}
             alt="menu"
             onClick={() => setisOpen(true)}
-            className={theme === "light" && "filter invert"}
+            className={theme === "light" ? "filter invert" : ""}
           />
         )}
         {isOpen && (

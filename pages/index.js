@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { Banner } from "../components";
+import { Banner, NFTCard } from "../components";
 import CreatorCard from "../components/CreatorCard";
 import images from "../assets";
 import { makeId } from "../utils/makeId";
@@ -50,58 +50,82 @@ const Home = () => {
           childStyles="md-text-4xl sm:text-2xl xs:text-xl text-left"
           parentStyles="justify-start mb-9 h-72 sm:h-60 p-12 xs:p-4 xs:h-44 rounded-3xl "
         />
-      </div>
 
-      <div>
-        <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl text-semibold xs:ml-0">
-          {" "}
-          Best Creators{" "}
-        </h1>
+        <div>
+          <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold xs:ml-0">
+            {" "}
+            Best Creators{" "}
+          </h1>
 
-        <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
-          <div
-            className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none"
-            ref={scrollRef}
-          >
-            {[6, 7, 8, 9, 10].map((i) => (
-              <CreatorCard
-                key={`creator-${i}`}
-                rank={i}
-                creatorImage={images[`creator${i}`]}
-                creatorName={`0*${makeId(3)}...${makeId(4)}`}
-                creatorEths={10 - i * 0.5}
+          <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
+            <div
+              className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none"
+              ref={scrollRef}
+            >
+              {[6, 7, 8, 9, 10].map((i) => (
+                <CreatorCard
+                  key={`creator-${i}`}
+                  rank={i}
+                  creatorImage={images[`creator${i}`]}
+                  creatorName={`0*${makeId(3)}...${makeId(4)}`}
+                  creatorEths={10 - i * 0.5}
+                />
+              ))}
+              {!hideButtons && (
+                <>
+                  <div
+                    className=" absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
+                    onClick={() => {
+                      handleScroll("left");
+                    }}
+                  >
+                    <Image
+                      src={images.left}
+                      fill
+                      alt="left_arrow"
+                      className={theme === "light" && "filter invert"}
+                    />
+                  </div>{" "}
+                  <div
+                    className=" absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
+                    onClick={() => {
+                      handleScroll("right");
+                    }}
+                  >
+                    <Image
+                      src={images.right}
+                      fill
+                      alt="left_arrow"
+                      className={theme === "light" && "filter invert"}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="mt-10 ">
+          <div className="flexBetween mx-4 xs:mx-0 minlg:mx-8 sm:flex-col sm:items-start">
+            <h1 className="flex-1 before:first:font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold  xs:mb-4">
+              Hot Bids
+            </h1>
+            <div className="SearchBar">Search abar</div>
+          </div>
+
+          <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              <NFTCard
+                key={`nft-${i}`}
+                nft={{
+                  i,
+                  name: `Nifty NFT ${i}`,
+                  price: (10 - i * 0.534).toFixed(2),
+                  seller: `0*${makeId(3)}...${makeId(4)}`,
+                  owner: `0*${makeId(3)}...${makeId(4)}`,
+                  description: "Cool NFT on sale",
+                }}
               />
             ))}
-            {!hideButtons && (
-              <>
-                <div
-                  className=" absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer left-0"
-                  onClick={() => {
-                    handleScroll("left");
-                  }}
-                >
-                  <Image
-                    src={images.left}
-                    fill
-                    alt="left_arrow"
-                    className={theme === "light" && "filter invert"}
-                  />
-                </div>{" "}
-                <div
-                  className=" absolute w-8 h-8 minlg:w-12 minlg:h-12 top-45 cursor-pointer right-0"
-                  onClick={() => {
-                    handleScroll("right");
-                  }}
-                >
-                  <Image
-                    src={images.right}
-                    fill
-                    alt="left_arrow"
-                    className={theme === "light" && "filter invert"}
-                  />
-                </div>
-              </>
-            )}
           </div>
         </div>
       </div>

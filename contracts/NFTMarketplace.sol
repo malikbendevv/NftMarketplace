@@ -33,10 +33,10 @@ event MarketItemCreated (
     address seller,
     address owner,
     uint256 price,
-    bool sold,
+    bool sold
 );
 
-consructor() {
+constructor() ERC721('Metaverse Tokens' ,'METT') {
     owner= payable(msg.sender);
 }
 
@@ -60,7 +60,7 @@ _tokenIds.increment();
 uint256 newTokenId=_tokenIds.current();
 _mint(msg.sender , newTokenId);
 _setTokenURI(newTokenId,tokenURI);
-createMarketItem(newTokenId,price)
+createMarketItem(newTokenId,price);
 return newTokenId;
 }
 
@@ -81,4 +81,131 @@ _transfer(msg.sender,address(this),tokenId);
 emit MarketItemCreated(tokenId,msg.sender,address(this),price,false);
 }
 
+// resseling token 
+
+function resellToken(uint256 tokenId, uint256 price) public payable {
+require(idToMarketItem[tokenId].owner ==msg.sender , 'Only item owner can perform this operation');
+
+require(msg.value == listingPrice,'Price must be equal to listing price');
+idToMarketPlaceItem[tokenId].sold = false ;
+idToMarketPlaceItem[tokenId].price = price;
+idToMarketPlaceItem[tokenId].seller = payable(msg.sender) ;
+idToMarketPlaceItem[tokenId].owner = payable(address(this)) ;
+
+_itemsSold.decrement();
+
+_transfer(msg.sender , address(this),tokenId);
+}
+
+
+function createMarketSale(uint256 tokenId) public payable{
+uint price=idToMarketItem[tokenId].price;
+
+require (msg.value==price,"Please submit the asking price inorder to complete the purchase");
+
+idToMarketItem[tokenId].owner = payable(msg.sender);
+idToMarketItem[tokenId].sold = true;
+idToMarketItem[tokenId].seller = payable(address(0));
+
+_itemSold.increment();
+
+_transfer(address(this),msg.sender,tokenId);
+
+payable(owner).transfer(listingPrice);
+payable(idTokenMarketItem[tokenId].seller).transfer(msg.value);
+}
+
+
+
+function fetchMarketItems() public view returns (MarketItem[] memory) {
+
+uint itemCount=_tokenIds.current();
+uint unsoldItemCount=_tokenIds.current() - _itemsSold.current();
+uint currentIndex =0;
+
+MarketItem[] memory items= new MarketItem[](unsoldItemCount);
+
+for(uint i=0; i<itemCount; i++){
+if(idToMarketItem[i+1].owner == address(this)){
+
+uint currentId= i+1;
+MarketItem storage currentItem=idToMarketItem[currentId];
+
+items[currentIndex]=currentItem;
+
+
+currentIndex +=1; 
+}
+
+}
+return items;
+
+
+}
+
+// fetch my nfts
+function fetchMyNFTs() public view returns (MarketItem[] memory) {
+uint totalItemCount =_tokenIds.current();
+uint itemCount =0;
+uint currentIndex =0 ;
+
+for(uint i=0; i<totalItemCount; i++) {
+if(idToMarketItem[i+1].owner == msg.sender){
+
+itemCount += 1;
+}
+}
+MarketItem[] memory items= new MarketItem[](itemCount);
+
+
+for(uint i=0; i<totalItemCount; i++){
+if(idToMarketItem[i+1].owner == msg.sender){
+
+uint currentId= i+1;
+MarketItem storage currentItem=idToMarketItem[currentId];
+
+items[currentIndex]=currentItem;
+
+
+currentIndex +=1; 
+}
+
+}
+return items;
+}
+
+
+function fetchItemsListed () public view returns (MarketItem[] memory) {
+
+uint totalItemCount =_tokenIds.current();
+uint itemCount =0;
+uint currentIndex =0 ;
+
+for(uint i=0; i<totalItemCount; i++) {
+if(idToMarketItem[i+1].seller == msg.sender){
+
+itemCount += 1;
+}
+}
+
+MarketItem[] memory items= new MarketItem[](itemCount);
+
+
+for(uint i=0; i<totalItemCount; i++){
+if(idToMarketItem[i+1].owner == msg.sender){
+
+uint currentId= i+1;
+MarketItem storage currentItem=idToMarketItem[currentId];
+
+items[currentIndex]=currentItem;
+
+
+currentIndex +=1; 
+}
+
+}
+return items;
+
+
+} 
 }

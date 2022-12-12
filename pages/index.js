@@ -53,8 +53,7 @@ const Home = () => {
 
         <div>
           <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold xs:ml-0">
-            {" "}
-            Best Creators{" "}
+            Best Creators
           </h1>
 
           <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>

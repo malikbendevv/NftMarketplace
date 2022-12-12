@@ -21,7 +21,6 @@ const NFTCard = ({ nft }) => {
             className="font-poppins dark:text-white text-nft-black-1
           font-semibold text-sm minlg:text-xl"
           >
-            {" "}
             {nft.name}
           </p>
           <div

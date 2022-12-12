@@ -6,7 +6,7 @@ import images from "../assets";
 const CreatorCard = ({ rank, creatorImage, creatorEths, creatorName }) => {
   return (
     <div className="min-w-190 minlg:min-w-240 dark:bg-nft-black-3 bg-white border dark:border-nft-black-3 border-nft-gray-1 rounded-3xl flex flex-col p-4 m-4">
-      <div className=" flex justify-center items-center bg-nft-red-violet rounded-full w-8 h-8 minlg:w-10 minlg-h10  py-2 px-2 ">
+      <div className="flex justify-center items-center bg-nft-red-violet rounded-full w-8 h-8 minlg:w-10 minlg-h10  py-2 px-2 ">
         <p className="font-poppins text-white font-semibold text-base minlg:text-lg">
           {rank}
         </p>

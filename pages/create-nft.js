@@ -1,24 +1,30 @@
 import { useState, useMemo, useCallback, useContext } from "react";
+
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
+import { NFTContext } from "../context/NFTContext";
 import { Button, Input } from "../components";
 import images from "../assets";
 
 const CreateNFT = () => {
-  const { fileUrl, setFileUrl } = useState(null);
-  const { formInput, setFormInput } = useState({
+  const [fileUrl, setFileUrl] = useState(null);
+  const [formInput, setFormInput] = useState({
     price: "",
     name: "",
     description: "",
   });
 
+  const router = useRouter();
   const { theme } = useTheme();
+  const { uploadToIPFS, createNFT } = useContext(NFTContext);
 
-  const onDrop = useCallback(() => {
-    "";
+  const onDrop = useCallback(async (acceptedFile) => {
+    const url = await uploadToIPFS(acceptedFile[0]);
+
+    setFileUrl(url);
   }, []);
 
   const {
@@ -28,6 +34,7 @@ const CreateNFT = () => {
     isDragAccept,
     isDragReject,
   } = useDropzone({ onDrop, accept: "image/*", maxSize: 5000000 });
+
   const fileStyle = useMemo(
     () => `dark:bg-nft-black-1
   bg-white border dark:border-white border-nft-gray-2
@@ -64,7 +71,7 @@ const CreateNFT = () => {
                     width={100}
                     height={100}
                     style={{ objectFit: "contain" }}
-                    className={theme === "light" && " filter invert"}
+                    className={theme === "light" ? " filter invert" : ""}
                   />
                 </div>
                 <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm ">
@@ -78,7 +85,12 @@ const CreateNFT = () => {
             {fileUrl && (
               <aside>
                 <div>
-                  <Image src={fileUrl} alt="assets_file" />
+                  <Image
+                    src={fileUrl}
+                    alt="assets_file"
+                    width={100}
+                    height={100}
+                  />
                 </div>
               </aside>
             )}
@@ -96,15 +108,15 @@ const CreateNFT = () => {
           inputType="textarea"
           title="Description"
           placeholder="NFT description"
-          handleClick={() => {
+          handleClick={(e) => {
             setFormInput({ ...formInput, description: e.target.value });
           }}
         />
         <Input
-          inputType="number"
+          inputType="string"
           title="Price"
           placeholder="NFT Price"
-          handleClick={() => {
+          handleClick={(e) => {
             setFormInput({ ...formInput, price: e.target.value });
           }}
         />
@@ -112,7 +124,7 @@ const CreateNFT = () => {
           <Button
             btnName="Create NFT"
             className="rounded-xl"
-            handleClick={() => {}}
+            handleClick={() => createNFT(formInput, fileUrl, router)}
           />
         </div>
       </div>

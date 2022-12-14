@@ -1025,7 +1025,7 @@
     "@types/sinon-chai" "^3.2.3"
     "@types/web3" "1.0.19"
 
-"@openzeppelin/contracts@4.5.0":
+"@openzeppelin/contracts@^4.5.0":
   "integrity" "sha512-fdkzKPYMjrRiPK6K4y64e6GzULR7R7RwxSigHS8DDp7aWDeoReqsQI+cxHV1UuhAqX69L1lAaWDxenfP+xiqzA=="
   "resolved" "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.5.0.tgz"
   "version" "4.5.0"
@@ -5123,7 +5123,7 @@
     "ajv" "^6.12.3"
     "har-schema" "^2.0.0"
 
-"hardhat@^2.0.0", "hardhat@^2.12.4":
+"hardhat@^2.0.0", "hardhat@^2.9.0":
   "integrity" "sha512-rc9S2U/4M+77LxW1Kg7oqMMmjl81tzn5rNFARhbXKUA1am/nhfMJEujOjuKvt+ZGMiZ11PYSe8gyIpB/aRNDgw=="
   "resolved" "https://registry.npmjs.org/hardhat/-/hardhat-2.12.4.tgz"
   "version" "2.12.4"

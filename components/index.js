@@ -4,4 +4,6 @@ import Button from "./Button";
 import Banner from "./Banner";
 import NFTCard from "./NFTCard";
 import Input from "./Input";
-export { Navbar, Footer, Button, Banner, NFTCard, Input };
+import Loader from "./Loader";
+import Modal from "./Modal";
+export { Modal, Navbar, Footer, Button, Banner, NFTCard, Input, Loader };

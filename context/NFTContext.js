@@ -4,6 +4,8 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { MarketAddress, MarketAddressABI } from "./constants";
 import { create as ipfsHttpClient } from "ipfs-http-client";
+import { ContractFunctionVisibility } from "hardhat/internal/hardhat-network/stack-traces/model";
+import axios from "axios";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 const projectSecretKey = process.env.NEXT_PUBLIC_PROJECT_KEY;
@@ -31,7 +33,7 @@ const fetchContract = (signerOrProvider) =>
 export const NFTProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
 
-  const nftCurrency = "JSM TOKEN";
+  const nftCurrency = "ETH";
 
   const checkIfWalletIsConnected = async () => {
     if (!window.ethereum) return alert("Please install Metamask");
@@ -45,8 +47,11 @@ export const NFTProvider = ({ children }) => {
     console.log({ accounts });
   };
 
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
+
   const ConnectWallet = async () => {
-    console.log("frome here");
     if (!window.ethereum) return alert("Please install Metamask");
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
@@ -94,28 +99,103 @@ export const NFTProvider = ({ children }) => {
   const createSale = async (url, formInputPrice, isReselling, id) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
+
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
-    console.log(11);
     const price = ethers.utils.parseUnits(formInputPrice, "ether");
-    console.log({ price });
+
     const contract = fetchContract(signer);
-    console.log(12);
 
     const listingPrice = await contract.getListingPrice();
-    console.log(13);
 
     const transaction = await contract.createToken(url, price, {
       value: listingPrice.toString(),
     });
-    console.log(14);
     await transaction.wait();
-    console.log(15);
   };
 
-  useEffect(() => {
-    checkIfWalletIsConnected();
-  }, []);
+  const fetchNFTs = async () => {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider();
+
+      const contract = fetchContract(provider);
+      const data = await contract.fetchMarketItems();
+      console.log({ data });
+
+      const items = await Promise.all(
+        data?.map(
+          async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+            const tokenURI = await contract.tokenURI(tokenId);
+
+            const {
+              data: { image, name, description },
+            } = await axios.get(tokenURI);
+
+            const price = ethers.utils.formatUnits(
+              unformattedPrice.toString(),
+              "ether"
+            );
+
+            return {
+              price,
+              TokenId: tokenId.toNumber(),
+              seller,
+              owner,
+              image,
+              name,
+              description,
+              tokenURI,
+            };
+          }
+        )
+      );
+      return items;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchMyNFTsOrListedNFTs = async (type) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const contract = fetchContract(signer);
+
+    const data =
+      type === "fetchItemsListed"
+        ? await contract.fetchItemsListed()
+        : await contract.fetchMyNfts;
+
+    const items = await Promise.all(
+      data?.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+        const tokenURI = await contract.tokenURI(tokenId);
+
+        const {
+          data: { image, name, description },
+        } = await axios.get(tokenURI);
+
+        const price = ethers.utils.formatUnits(
+          unformattedPrice.toString(),
+          "ether"
+        );
+
+        return {
+          price,
+          TokenId: tokenId.toNumber(),
+          seller,
+          owner,
+          image,
+          name,
+          description,
+          tokenURI,
+        };
+      })
+    );
+    return items;
+  };
 
   return (
     <NFTContext.Provider
@@ -125,6 +205,8 @@ export const NFTProvider = ({ children }) => {
         currentAccount,
         uploadToIPFS,
         createNFT,
+        fetchNFTs,
+        fetchMyNFTsOrListedNFTs,
       }}
     >
       {children}

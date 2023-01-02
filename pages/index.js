@@ -95,7 +95,9 @@ const Home = () => {
                       src={images.left}
                       fill
                       alt="left_arrow"
-                      className={theme === "light" && "filter invert"}
+                      className={
+                        theme === "light" ? "filter invert" : undefined
+                      }
                     />
                   </div>{" "}
                   <div

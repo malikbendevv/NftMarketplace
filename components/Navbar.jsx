@@ -83,7 +83,7 @@ const Navbar = () => {
           >
             <Image
               src={images.logo02}
-              objectFit="contain"
+              style={{ objectFit: "contain" }}
               width={32}
               height={32}
               alt="logo"
@@ -97,7 +97,7 @@ const Navbar = () => {
           <div className="hidden md:flex" onClick={() => {}}>
             <Image
               src={images.logo02}
-              objectFit="contain"
+              style={{ objectFit: "contain" }}
               width={32}
               height={32}
               alt="logo"

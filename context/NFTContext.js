@@ -4,7 +4,6 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { MarketAddress, MarketAddressABI } from "./constants";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import { ContractFunctionVisibility } from "hardhat/internal/hardhat-network/stack-traces/model";
 import axios from "axios";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -197,6 +196,25 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
+  const buyNft = async (nft) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      MarketAddress,
+      MarketAddressABI,
+      signer
+    );
+
+    const price = ethers.utils.parseUnits(nft.price, "ether");
+    console.log(price);
+    const transaction = await contract.createMarketSale(nft.tokenId, {
+      value: price,
+    });
+
+    await transaction.wait();
+  };
   return (
     <NFTContext.Provider
       value={{
@@ -207,6 +225,7 @@ export const NFTProvider = ({ children }) => {
         createNFT,
         fetchNFTs,
         fetchMyNFTsOrListedNFTs,
+        buyNft,
       }}
     >
       {children}

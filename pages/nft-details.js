@@ -217,9 +217,9 @@ const NFTDetails = () => {
                 />
               </div>
               <p className="font-poppins dark:text-white text-nft-black-1 text-sm minlg:text-xl font-normal mt-10">
-                You succesfuly purchased{" "}
+                You succesfuly purchased
                 <span className="font-semibold">
-                  {nft.name} from{" "}
+                  {nft.name} from
                   <span className="font-semibold">
                     {shortenAddress(nft.seller)}
                   </span>

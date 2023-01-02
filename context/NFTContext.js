@@ -166,7 +166,7 @@ export const NFTProvider = ({ children }) => {
     const data =
       type === "fetchItemsListed"
         ? await contract.fetchItemsListed()
-        : await contract.fetchMyNfts;
+        : await contract.fetchMyNFTs();
 
     const items = await Promise.all(
       data?.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
@@ -206,13 +206,11 @@ export const NFTProvider = ({ children }) => {
       MarketAddressABI,
       signer
     );
-
-    const price = ethers.utils.parseUnits(nft.price, "ether");
-    console.log(price);
-    const transaction = await contract.createMarketSale(nft.tokenId, {
+    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
+    const transaction = await contract.createMarketSale(nft.TokenId, {
       value: price,
     });
-
+    console.log(5);
     await transaction.wait();
   };
   return (

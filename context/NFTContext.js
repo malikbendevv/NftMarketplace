@@ -4,7 +4,6 @@ import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { MarketAddress, MarketAddressABI } from "./constants";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import { ContractFunctionVisibility } from "hardhat/internal/hardhat-network/stack-traces/model";
 import axios from "axios";
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -108,9 +107,13 @@ export const NFTProvider = ({ children }) => {
 
     const listingPrice = await contract.getListingPrice();
 
-    const transaction = await contract.createToken(url, price, {
-      value: listingPrice.toString(),
-    });
+    const transaction = !isReselling
+      ? await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        })
+      : await contract.resellToken(id, price, {
+          value: listingPrice.toString(),
+        });
     await transaction.wait();
   };
 
@@ -167,7 +170,7 @@ export const NFTProvider = ({ children }) => {
     const data =
       type === "fetchItemsListed"
         ? await contract.fetchItemsListed()
-        : await contract.fetchMyNfts;
+        : await contract.fetchMyNFTs();
 
     const items = await Promise.all(
       data?.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
@@ -197,6 +200,23 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
+  const buyNft = async (nft) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      MarketAddress,
+      MarketAddressABI,
+      signer
+    );
+    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
+    const transaction = await contract.createMarketSale(nft.TokenId, {
+      value: price,
+    });
+    console.log(5);
+    await transaction.wait();
+  };
   return (
     <NFTContext.Provider
       value={{
@@ -205,8 +225,10 @@ export const NFTProvider = ({ children }) => {
         currentAccount,
         uploadToIPFS,
         createNFT,
+        createSale,
         fetchNFTs,
         fetchMyNFTsOrListedNFTs,
+        buyNft,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ import Link from "next/link";
 import images from "../assets";
 import { shortenAddress } from "../utils/shortenAddress";
 
-const NFTCard = ({ nft }) => {
+const NFTCard = ({ nft, onProfilePage }) => {
   const { nftCurrency } = useContext(NFTContext);
   return (
     <Link href={{ pathname: "/nft-details", query: nft }}>
@@ -40,7 +40,7 @@ const NFTCard = ({ nft }) => {
               className="font-poppins dark:text-white text-nft-black-1
           font-semibold text-xs minlg:text-lg"
             >
-              {nft.seller.length > 10 ? shortenAddress(nft.seller) : nft.seller}
+              {shortenAddress(onProfilePage ? nft.owner : nft.seller)}
             </p>
           </div>
         </div>{" "}

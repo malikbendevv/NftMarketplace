@@ -152,8 +152,8 @@ const NFTDetails = () => {
               Details
             </p>
           </div>
-          <div className="font-poppins dark:text-white text-nft-black-1 text-base font-normal mt-3">
-            <p>{nft.description} </p>
+          <div className="font-poppins dark:text-white text-nft-black-1 text-base font-normal mt-3  max-w-sm ">
+            <p className=" max-w-sm overflow-hidden">{nft.description} </p>
           </div>
         </div>
         <div className="flex flex-row sm:flex-col mt-10">
@@ -240,7 +240,7 @@ const NFTDetails = () => {
           footer={
             <div className="flexCenter flex-col">
               <Button
-                btnName="Checkout"
+                btnName="Check it out"
                 classStyles="sm:mb-5 sm:mr-0 rounded-xl"
                 handleClick={() => router.push("/my-nfts")}
               />

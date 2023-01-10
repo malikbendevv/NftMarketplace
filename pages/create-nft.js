@@ -88,8 +88,9 @@ const CreateNFT = () => {
                   <Image
                     src={fileUrl}
                     alt="assets_file"
-                    width={100}
-                    height={100}
+                    width={80}
+                    height={80}
+                    style={{ objectFit: "cover" }}
                   />
                 </div>
               </aside>

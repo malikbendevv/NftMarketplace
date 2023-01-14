@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 
 import { NFTContext } from "../context/NFTContext";
-import { Button, Input } from "../components";
+import { Button, Input, Loader } from "../components";
 import images from "../assets";
 
 const CreateNFT = () => {
@@ -19,7 +19,7 @@ const CreateNFT = () => {
 
   const router = useRouter();
   const { theme } = useTheme();
-  const { uploadToIPFS, createNFT } = useContext(NFTContext);
+  const { uploadToIPFS, createNFT, isLoadingNFT } = useContext(NFTContext);
 
   const onDrop = useCallback(async (acceptedFile) => {
     const url = await uploadToIPFS(acceptedFile[0]);
@@ -45,6 +45,10 @@ const CreateNFT = () => {
   `,
     [isDragActive, isDragAccept, isDragReject]
   );
+
+  if (isLoadingNFT) {
+    return <Loader />;
+  }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">

@@ -9,21 +9,18 @@ import { shortenAddress } from "../utils/shortenAddress";
 import axios from "axios";
 
 const ResellNFT = () => {
-  const { createSale } = useContext(NFTContext);
+  const { createSale, isLoadingNFT } = useContext(NFTContext);
   const router = useRouter();
   const { tokenId, tokenURI } = router.query;
 
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const fetchNFT = async () => {
     const { data } = await axios.get(tokenURI);
 
     setPrice(data.price);
     setImage(data.image);
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -37,7 +34,7 @@ const ResellNFT = () => {
     router.push("/");
   };
 
-  if (isLoading) {
+  if (isLoadingNFT) {
     return (
       <div className="flexStart min-h-screen">
         <div className="flexCenter w-full my-4">
@@ -53,7 +50,7 @@ const ResellNFT = () => {
   }
 
   return (
-    <div className="flex justifye-center sm:px-4 p-12">
+    <div className="flex justify-center sm:px-4 p-12">
       <div className="w-3/5 md:w-full ">
         <h1 className="font-poppins dark:text-white text-nft-black font-semibold text-2xl">
           Ressel NFT
@@ -67,16 +64,21 @@ const ResellNFT = () => {
         />
 
         {image && (
-          <img src={image} className="rounded mt-4" width={350} alt="" />
+          <Image
+            src={image}
+            className="rounded mt-4"
+            width={350}
+            height={350}
+            alt=""
+          />
         )}
-      </div>
-
-      <div className="mt-7 w-full flex justify-end">
-        <Button
-          btnName="List NFT"
-          classStyles="rounded-xl"
-          handleClick={resell}
-        />
+        <div className="mt-7 w-full flex justify-end">
+          <Button
+            btnName="List NFT"
+            classStyles="rounded-xl"
+            handleClick={resell}
+          />
+        </div>
       </div>
     </div>
   );

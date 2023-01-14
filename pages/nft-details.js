@@ -60,8 +60,9 @@ const PaymentBodyCmp = ({ nft, nftCurrency }) => {
 };
 
 const NFTDetails = () => {
-  const { currentAccount, nftCurrency, buyNft } = useContext(NFTContext);
-
+  const { isLoadingNFT, currentAccount, nftCurrency, buyNft } =
+    useContext(NFTContext);
+  console.log({ currentAccount });
   const [isLoading, setIsLoading] = useState(true);
   const [nft, setNfts] = useState({
     image: "",
@@ -70,6 +71,7 @@ const NFTDetails = () => {
     owner: "",
     price: "",
     seller: "",
+    tokenURI: "",
   });
 
   const router = useRouter();
@@ -167,7 +169,7 @@ const NFTDetails = () => {
               classStyles="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
               handleClick={() => {
                 router.push(
-                  `/resell-nft?tokenId=${nft.TokenId}&tokenURI=${nft.tokenURI}`
+                  `/resell-nft?tokenId=${nft.tokenId}&tokenURI=${nft.tokenURI}`
                 );
               }}
             />
@@ -246,6 +248,26 @@ const NFTDetails = () => {
               />
             </div>
           }
+          handleClose={() => {
+            setSuccessModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
+
+      {isLoadingNFT && (
+        <Modal
+          header="Buying NFT..."
+          body={
+            <div className="flexCenter flex-col text-center">
+              <div className="relative w-52 h-52">
+                <Loader />
+              </div>
+            </div>
+          }
+          handleClose={() => {
+            setPaymentModal(false);
+          }}
         />
       )}
     </div>

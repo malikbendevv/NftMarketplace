@@ -261,7 +261,16 @@ const NFTDetails = () => {
           body={
             <div className="flexCenter flex-col text-center">
               <div className="relative w-52 h-52">
-                <Loader />
+                <div className="flexStart min-h-screen">
+                  <div className="flexCenter w-full my-4">
+                    <Image
+                      src={images.loader}
+                      alt="loader"
+                      width={100}
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           }

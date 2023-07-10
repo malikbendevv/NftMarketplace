@@ -48,7 +48,7 @@ const MenuItems = ({ isMobile, active, setActive, setisOpen }) => {
   );
 };
 
-const ButtonGroup = ({ setActive, router, setisOpen }) => {
+const ButtonGroup = ({ setActive, router, setisOpen, isMobile }) => {
   const { ConnectWallet, currentAccount } = useContext(NFTContext);
 
   return currentAccount ? (
@@ -57,7 +57,7 @@ const ButtonGroup = ({ setActive, router, setisOpen }) => {
       btnName="Create"
       handleClick={() => {
         setActive("");
-        setisOpen(false);
+        if (isMobile) setisOpen(false);
         router.push("/create-nft");
       }}
     />
@@ -120,7 +120,7 @@ const Navbar = () => {
               alt="logo"
             />
             <p className="dark:text-white text-nft-black-1 font-semibold text-lg ml-1">
-              CryptoKet
+              CryptoCanvas
             </p>
           </div>
         </Link>
@@ -201,6 +201,7 @@ const Navbar = () => {
                 setActive={setActive}
                 router={router}
                 setisOpen={setisOpen}
+                isMobile
               />
             </div>
           </div>

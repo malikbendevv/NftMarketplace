@@ -92,7 +92,7 @@ export const NFTProvider = ({ children }) => {
 
       router.push("/");
     } catch (error) {
-      console.log(error, "error uplaoding files to ipfs");
+      console.log(error, "error uploading files to ipfs");
     }
   };
 
@@ -110,11 +110,11 @@ export const NFTProvider = ({ children }) => {
 
     const transaction = !isReselling
       ? await contract.createToken(url, price, {
-          value: listingPrice.toString(),
-        })
+        value: listingPrice.toString(),
+      })
       : await contract.resellToken(id, price, {
-          value: listingPrice.toString(),
-        });
+        value: listingPrice.toString(),
+      });
 
     setIsLoadingNFT(true);
     await transaction.wait();
@@ -123,7 +123,8 @@ export const NFTProvider = ({ children }) => {
   const fetchNFTs = async () => {
     setIsLoadingNFT(false);
     try {
-      const provider = new ethers.providers.JsonRpcProvider();
+      const provider = new ethers.providers.JsonRpcProvider("https://sepolia.infura.io/v3/63297c08a3304c9ea60709449515f606")
+        ;
 
       const contract = fetchContract(provider);
       const data = await contract.fetchMarketItems();
@@ -170,11 +171,13 @@ export const NFTProvider = ({ children }) => {
     const signer = provider.getSigner();
 
     const contract = fetchContract(signer);
+    console.log(1);
 
     const data =
       type === "fetchItemsListed"
         ? await contract.fetchItemsListed()
         : await contract.fetchMyNFTs();
+    console.log(2);
 
     const items = await Promise.all(
       data?.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
@@ -188,6 +191,7 @@ export const NFTProvider = ({ children }) => {
           unformattedPrice.toString(),
           "ether"
         );
+        console.log(3);
 
         return {
           price,
@@ -218,8 +222,13 @@ export const NFTProvider = ({ children }) => {
     const transaction = await contract.createMarketSale(nft.TokenId, {
       value: price,
     });
+    console.log(1);
     setIsLoadingNFT(true);
+    console.log(2);
+
     await transaction.wait();
+    console.log(3);
+
     setIsLoadingNFT(false);
   };
   return (

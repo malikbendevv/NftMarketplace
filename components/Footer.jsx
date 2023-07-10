@@ -24,7 +24,7 @@ const Footer = () => {
   );
 
   return (
-    <footer className="flexCenter flex-col border-t dark:border-nft-black-1 border-nft gray-1 sm:py-8 py-16">
+    <footer className="flexCenter flex-col border-t dark:border-nft-black-1 border-nft-gray-1 sm:py-8 py-16">
       <div className=" w-full  sm:px-4 px-16 minmd:w-4/5 flex flex-row md:flex-col">
         <div className="flexStart flex-1 flex-col">
           <div className="flexCenter cursor-pointer">
@@ -36,7 +36,7 @@ const Footer = () => {
               alt="logo"
             />
             <p className="dark:text-white text-nft-black-1 font-semibold text-lg ml-1 ">
-              CryptoKet
+              CryptoCanvas
             </p>
           </div>
           <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base mt-6">
@@ -55,7 +55,7 @@ const Footer = () => {
         </div>
         <div className="flex-1 flexBetweenStart flex-wrap mt-10 md:mt-8">
           <FooterLinks
-            heading="CryptoKet"
+            heading="CryptoCanva"
             items={["Explore", "How it  Works", "Contact Us"]}
           />
           <FooterLinks
